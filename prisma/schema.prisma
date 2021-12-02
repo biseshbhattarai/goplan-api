@@ -18,7 +18,7 @@ model User {
   email                 String    @unique
   dob                   DateTime  @db.Date
   phoneNumber           String
-  employementStatus     EmployementStatus
+  employmentStatus     EmployementStatus
   password              String
   profile               Profile[]
 }
