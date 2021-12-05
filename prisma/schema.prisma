@@ -1,5 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
 generator client {
   provider        = "prisma-client-js"
   previewFeatures = ["referentialIntegrity"]
@@ -18,9 +16,14 @@ model User {
   email                 String    @unique
   dob                   DateTime  @db.Date
   phoneNumber           String
-  employmentStatus     EmployementStatus
+  employmentStatus      EmployementStatus
   password              String
   profile               Profile[]
+  reminder              Reminder[]
+  achievement           Achievement[]
+  toUser                Share[]          @relation("toUser")
+  fromUser              Share[]          @relation("fromUser")
+  note                  Note[]
 }
 
 
@@ -34,8 +37,116 @@ model Profile {
   @@index([userId])
 } 
 
+model Goal { 
+  id              Int         @id @default(autoincrement())
+  goalTitle       String
+  goalDescription String
+  createDate      DateTime    @db.Date
+  startDate       DateTime    @db.Date
+  toCompleteDate  DateTime    @db.Date
+  toSetReminder   Boolean
+  reminder        Reminder[]
+  achievement     Achievement[]
+  app             App[]
+  share                 Share[]
+
+
+}
+
+model Reminder {
+  id              Int          @id @default(autoincrement())
+  reminderTitle   String
+  createDate      DateTime     @db.Date
+  remindDate      DateTime     @db.Date
+  goal            Goal         @relation(fields:[goalId], references:[id], onDelete: Cascade)
+  goalId          Int
+  user            User         @relation(fields: [userId], references:[id], onDelete:Cascade)
+  userId          Int
+
+}
+
+model Achievement {
+  id                    Int     @id @default(autoincrement())
+  achievementStatus     String?
+  goal                  Goal    @relation(fields:[goalId], references:[id], onDelete:Cascade)
+  goalId                Int
+  user                  User    @relation(fields: [userId], references:[id], onDelete:Cascade)
+  userId                Int
+  share                 Share[]
+}
+
+model App {
+  id                    Int      @id @default(autoincrement())
+  appName               String
+  appLocation           String
+  appType               AppType?
+  toBlockDuration       String
+  actualBlockDuration   String
+  startBlockTime        DateTime 
+  endBlockTime          DateTime
+  referenceToGoal       Goal?     @relation(fields:[goalId], references:[id], onDelete:Cascade)
+  goalId                Int
+}
+
+model Share {
+  id                    Int         @id @default(autoincrement())
+  goal                  Goal?       @relation(fields:[goalId], references:[id], onDelete:Cascade)
+  goalId                Int
+  achievement           Achievement @relation(fields:[achievementId], references:[id], onDelete:Cascade)
+  achievementId         Int
+  toUser                User        @relation("toUser", fields:[toUserId], references:[id], onDelete:Cascade)
+  toUserId              Int
+  fromUser              User        @relation("fromUser", fields:[fromUserId], references:[id], onDelete:Cascade)
+  fromUserId            Int
+
+}
+
+model Note {
+  id            Int     @id @default(autoincrement())
+  noteTitle     String
+  noteType      NoteType?
+  noteText      String
+  user          User    @relation(fields: [userId], references:[id], onDelete:Cascade)
+  userId        Int
+}
+
+model Badge {
+  id        Int   @id @default(autoincrement())
+  badgeName String
+  badgeType BadgeType
+  badgeLogo String?
+
+}
+
 
 enum EmployementStatus{
   STUDENT
   EMPLOYED
+}
+
+enum NoteType {
+  GOAL
+  IDEA
+  REMINDER
+  LEARNING
+  IMPORTANT
+  URGENT
+}
+
+enum AppType {
+  SOCIAL_MEDIA
+  ENTERTAINMENT
+  GAME
+  PRODUCTIVITY
+  UTILITY
+  OTHER
+}
+
+enum BadgeType {
+  PRENOOB
+  BEGINEER
+  COMPETENT
+  DEDICATED
+  EXPERT
+  UNBEATABLE
 }

@@ -6,7 +6,7 @@ const prisma = new PrismaClient();
 
 async function main() {
   const salt = await bcrypt.genSalt(10);
-  const encryptedPassword = await bcrypt.hash(env.PASSWORD, salt);
+  const encryptedPassword = await bcrypt.hash(env.password, salt);
   await prisma.user.upsert({
     where: {
       email: 'admin@goplan.com',

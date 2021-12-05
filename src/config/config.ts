@@ -2,7 +2,7 @@ import { env } from 'process';
 
 export const config = {
   jwt: {
-    secret: env.SECRET,
+    secret: env.secret,
     signOptions: { expiresIn: '1d' },
   },
   db: {
