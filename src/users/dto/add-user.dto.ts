@@ -43,8 +43,4 @@ export class AddUserProfileDto {
   @IsNotEmpty()
   @IsUrl()
   mediaHandle: string;
-
-  @IsNotEmpty()
-  @IsNumber()
-  userId: number;
 }

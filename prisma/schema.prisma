@@ -24,6 +24,7 @@ model User {
   toUser                Share[]          @relation("toUser")
   fromUser              Share[]          @relation("fromUser")
   note                  Note[]
+  goal                  Goal[]
 }
 
 
@@ -48,8 +49,9 @@ model Goal {
   reminder        Reminder[]
   achievement     Achievement[]
   app             App[]
-  share                 Share[]
-
+  share           Share[]
+  user            User        @relation(fields: [userId], references:[id], onDelete:Cascade)
+  userId          Int
 
 }
 

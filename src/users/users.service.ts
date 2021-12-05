@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/db/prisma/prisma.service';
 import * as bcrypt from 'bcrypt';
-import { AddUserDto } from './dto/add-user.dto';
+import { AddUserDto, AddUserProfileDto } from './dto/add-user.dto';
 import { GetUserDto } from './dto/get-user.dto';
 
 @Injectable()
@@ -34,5 +34,14 @@ export class UsersService {
     } catch (error) {
       throw error;
     }
+  }
+
+  async createUserProfile(profile: AddUserProfileDto, image, userId: number) {
+    const data = {
+      ...profile,
+      profileImage: image,
+      userId: userId,
+    };
+    return await this.prisma.profile.create({ data: data });
   }
 }
