@@ -121,7 +121,7 @@ model Badge {
 }
 
 
-enum EmployementStatus{
+enum EmployementStatus {
   STUDENT
   EMPLOYED
 }
